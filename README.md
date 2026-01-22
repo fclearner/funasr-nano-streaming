@@ -7,3 +7,5 @@ streaming codes for funasr-nano
 
 用gemini3-pro改成了http，加了gradio流式输入显示功能
 不是最终版，llm需要一些前一个chunk的文本，参考这里的训练数据准备: https://github.com/modelscope/FunASR/blob/36656aa8f7f30cece85ceda7e2c6ec5952a59925/funasr/datasets/fun_asr_datasets/datasets.py#L237
+
+generate函数调用的时候是可以配置llm推理超参的，记得调一下，还有itn、语种这些超参
