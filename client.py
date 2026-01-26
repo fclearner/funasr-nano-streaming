@@ -94,7 +94,7 @@ class HTTPASRClient:
             if not final_sentence:
                 final_sentence = self.current_text
 
-            self.history_text += final_sentence
+            self.history_text = ""
             self.current_text = ""
             self.session_id = str(uuid.uuid4()) # 换新 ID
             

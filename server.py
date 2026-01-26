@@ -72,7 +72,7 @@ async def asr_streaming(
     # 1. 初始化 Session
     if session_id not in session_store:
         session_store[session_id] = {
-            "asr_online": {"cache": {}}, # 这里就是 Cache，用于流式连贯性
+            "asr_online": {"cache": {}, "prev_text": ""}, # 这里就是 Cache，用于流式连贯性
             "buffer": [],                # 音频缓冲
             "text_segment": "",          # 当前句子的识别结果
         }
@@ -84,6 +84,7 @@ async def asr_streaming(
     if len(audio_bytes) > 0:
         audio_tensor = decode_and_resample(audio_bytes, audio_fs)
         session["buffer"].append(audio_tensor)
+        audio_tensor = torch.cat(session["buffer"], dim = 0)
         
         # 3. 流式推理 (使用 Cache)
         res_online = await run_inference(
@@ -93,6 +94,7 @@ async def asr_streaming(
         )
         if res_online:
             session["text_segment"] = res_online[0]["text"]
+            session["asr_online"]["prev_text"] = res_online[0]["text"]
 
     # 4. 句子结束处理 (Offline 修正)
     is_final = False
